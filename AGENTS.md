@@ -57,9 +57,10 @@ Use [semver](https://semver.org) for versioning: `vMAJOR.MINOR.PATCH`.
 - **MINOR** — new features, backward compatible
 - **PATCH** — bug fixes, performance improvements, refactors
 
-To release:
+After every nontrivial change, determine the correct version bump, inspect the latest tag, and create a new one:
 
 ```bash
+git fetch --tags
 git tag v1.2.3 && git push origin v1.2.3
 ```
 
