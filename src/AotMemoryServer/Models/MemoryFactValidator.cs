@@ -15,10 +15,6 @@ public static partial class MemoryFactValidator
         RegexOptions.Compiled)]
     private static partial Regex SecretPattern();
 
-    [GeneratedRegex(@"\b(?i)(using\s+System|namespace\s+\w+|class\s+\w+|static\s+void\s+Main|function\s+\w+|const\s+\w+|let\s+\w+|require\(|def\s+\w+|import\s+\w+)",
-        RegexOptions.Compiled)]
-    private static partial Regex CodePattern();
-
     public static IReadOnlyList<ValidationError> Validate(MemoryFact fact)
     {
         ArgumentNullException.ThrowIfNull(fact);
@@ -29,7 +25,6 @@ public static partial class MemoryFactValidator
         AddIfNotNull(errors, ValidateRequired(fact.Value, nameof(fact.Value)));
         AddIfNotNull(errors, ValidateLength(fact.Value, nameof(fact.Value)));
         AddIfNotNull(errors, ValidateNoSecrets(fact.Value, nameof(fact.Value)));
-        AddIfNotNull(errors, ValidateNoRawCode(fact.Value, nameof(fact.Value)));
         AddIfNotNull(errors, ValidateCategory(fact.Category));
 
         return errors;
@@ -75,13 +70,6 @@ public static partial class MemoryFactValidator
     {
         return SecretPattern().IsMatch(value)
             ? new ValidationError(propertyName, "Value appears to contain secrets, API keys, or credentials.")
-            : null;
-    }
-
-    private static ValidationError? ValidateNoRawCode(string value, string propertyName)
-    {
-        return CodePattern().IsMatch(value)
-            ? new ValidationError(propertyName, "Value appears to contain source code.", IsWarning: true)
             : null;
     }
 

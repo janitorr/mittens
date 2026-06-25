@@ -123,33 +123,6 @@ public sealed class MemoryFactValidatorTests
     }
 
     [Fact]
-    public void Validate_ValueContainsCSharpCode_ReturnsWarning()
-    {
-        var fact = new MemoryFact { Key = "k", Value = "using System; class Foo { }", Category = "fact", Scope = "global" };
-        var errors = MemoryFactValidator.Validate(fact);
-
-        Assert.Contains(errors, e => e.Property == "Value" && e.IsWarning);
-    }
-
-    [Fact]
-    public void Validate_ValueContainsJavaScriptCode_ReturnsWarning()
-    {
-        var fact = new MemoryFact { Key = "k", Value = "function hello() { return 1; }", Category = "fact", Scope = "global" };
-        var errors = MemoryFactValidator.Validate(fact);
-
-        Assert.Contains(errors, e => e.Property == "Value" && e.IsWarning);
-    }
-
-    [Fact]
-    public void Validate_ValueContainsPythonCode_ReturnsWarning()
-    {
-        var fact = new MemoryFact { Key = "k", Value = "def hello():\n    print('hi')", Category = "fact", Scope = "global" };
-        var errors = MemoryFactValidator.Validate(fact);
-
-        Assert.Contains(errors, e => e.Property == "Value" && e.IsWarning);
-    }
-
-    [Fact]
     public void Validate_EmptyCategory_ReturnsError()
     {
         var fact = new MemoryFact { Key = "k", Value = "v", Category = "", Scope = "global" };
@@ -210,12 +183,4 @@ public sealed class MemoryFactValidatorTests
         Assert.Contains(errors, e => e.Property == "Value" && !e.IsWarning);
     }
 
-    [Fact]
-    public void Validate_WarningOnly_DoesNotContainHardErrors()
-    {
-        var fact = new MemoryFact { Key = "k", Value = "using System; class Foo { }", Category = "fact", Scope = "global" };
-        var errors = MemoryFactValidator.Validate(fact);
-
-        Assert.All(errors, e => Assert.True(e.IsWarning));
-    }
 }
