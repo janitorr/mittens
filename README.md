@@ -110,10 +110,11 @@ src/AotMemoryServer/
 ├── Application/          # CQRS handlers, serialization, DTOs
 │   ├── Abstractions/     # Interfaces and base types
 │   ├── Commands/         # Upsert, Update, Delete
-│   └── Queries/          # GetFacts, GetFactById, SearchFacts
-├── Data/                 # EF Core DbContext, compiled model, migrations
+│   ├── Queries/          # GetFacts, GetFactById, SearchFacts
+│   └── Serialization/    # JSON serialization context and DTOs
+├── Data/                 # EF Core DbContext and compiled model
+│   └── Compiled/         # Precompiled EF Core model (AOT-ready)
 ├── Endpoints/            # REST, Health, MCP endpoint definitions
-├── Migrations/           # EF Core migrations
 ├── Models/               # MemoryFact entity, validator, validation errors
 └── Program.cs            # Entry point, DI, middleware, routing
 
@@ -134,6 +135,46 @@ dotnet test tests/AotMemoryServer.Tests.Unit
 # Run integration tests
 dotnet test tests/AotMemoryServer.Tests.Integration
 ```
+
+## Using with opencode
+
+### 1. Run the server
+
+Copy [`docker-compose.example.yml`](docker-compose.example.yml) into your project and start it:
+
+```bash
+docker compose -f docker-compose.example.yml up -d
+```
+
+Or download it directly:
+
+```bash
+curl -O https://raw.githubusercontent.com/janitorr/aot-memory-server/main/docker-compose.example.yml
+docker compose -f docker-compose.example.yml up -d
+```
+
+The server listens at `http://localhost:5070`.
+
+### 2. Configure opencode
+
+Add this to your project's `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "memory": {
+      "type": "remote",
+      "url": "http://localhost:5070/mcp",
+      "enabled": true
+    }
+  }
+}
+```
+
+### 3. Add agent instructions
+
+Copy [`AGENTS.md`](AGENTS.md) into your project root. It tells opencode agents about available tools, categories, scope conventions, and startup — so they know when and how to use the memory server.
 
 ## License
 
