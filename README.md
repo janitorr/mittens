@@ -32,6 +32,24 @@ dotnet publish -c Release
 
 The server starts at `http://localhost:5070`. Open `http://localhost:5070/scalar/v1` for the interactive API reference.
 
+### Docker
+
+```bash
+# Build and start
+docker compose up -d
+
+# Follow logs
+docker compose logs -f
+
+# Stop
+docker compose down
+
+# Stop and remove the data volume
+docker compose down -v
+```
+
+The container stores the SQLite database in a named volume (`memory-data`), so data persists across restarts. Works on Linux, macOS, and Windows (Docker Desktop).
+
 ## API Summary
 
 | Method | Path | Description |

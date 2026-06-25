@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+*.db
+*.db-shm
+*.db-wal
+.git/
+.gitignore
+plan/
+tests/
+opencode.json
+AGENTS.md
+README.md
+**/appsettings.Development.json

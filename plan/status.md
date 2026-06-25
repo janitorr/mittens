@@ -35,6 +35,6 @@
   - [x] OpenAPI document generation at `/openapi/v1.json`
   - [x] Scalar UI at `/scalar/v1`
 - [x] Step 8: Tests
-- [ ] Step 9: Dockerfile
-- [ ] Step 10: docker-compose.yml
-- [ ] Step 11: Housekeeping (.env.example, README)
+- [x] Step 9: Dockerfile (multi-stage AOT, Alpine runtime)
+- [x] Step 10: docker-compose.yml (named volume, port mapping, env config)
+- [ ] Step 11: Housekeeping (.env.example, README — README updated with Docker section)

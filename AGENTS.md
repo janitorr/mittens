@@ -10,6 +10,10 @@ running before you can use its tools. If you get connection errors, start it
 with:
 
 ```bash
+# Via Docker (recommended — works on Linux, macOS, and Windows)
+docker compose up -d
+
+# Or directly with .NET
 dotnet run --project src/AotMemoryServer
 ```
 
