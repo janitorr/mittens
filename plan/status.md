@@ -26,6 +26,11 @@
   - [x] Apply migrations on startup
   - [x] Map endpoint groups (REST, Health, MCP)
   - [x] JSON source generator for AOT
+- [x] Step 7b: Scalar API reference UI
+  - [x] `Microsoft.AspNetCore.OpenApi` NuGet package (AOT-safe)
+  - [x] `Scalar.AspNetCore` NuGet package
+  - [x] OpenAPI document generation at `/openapi/v1.json`
+  - [x] Scalar UI at `/scalar/v1`
 - [ ] Step 8: Tests
 - [ ] Step 9: Dockerfile
 - [ ] Step 10: docker-compose.yml

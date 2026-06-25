@@ -64,7 +64,22 @@ public static class McpEndpoints
             {
                 return Error(id, -32603, "Internal error", new { message = ex.Message });
             }
-        });
+        })
+        .Accepts<McpRequest>("application/json")
+        .Produces<McpResponse>(StatusCodes.Status200OK)
+        .Produces<McpResponse>(StatusCodes.Status400BadRequest)
+        .WithTags("MCP")
+        .WithDescription("""
+            JSON-RPC 2.0 endpoint for memory operations.
+
+            Supported methods:
+            - memory/list   — List facts (params: category, scope, key, page, pageSize)
+            - memory/get    — Get fact by ID (params: id)
+            - memory/search — Search facts (params: q, category, scope, page, pageSize)
+            - memory/set    — Create or replace a fact (params: fact, force)
+            - memory/update — Update an existing fact by ID (params: id, fact)
+            - memory/delete — Delete a fact by ID (params: id)
+            """);
     }
 
     private static async Task<object?> HandleList(HttpContext context, JsonNode? paramsNode)

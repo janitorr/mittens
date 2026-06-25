@@ -16,10 +16,19 @@ public static class HealthEndpoints
 
         app.MapGet("/api/ready", async (AppDbContext db) =>
         {
-            var canConnect = await db.Database.CanConnectAsync();
-            var applied = await db.Database.GetAppliedMigrationsAsync();
-            var ready = canConnect && applied.Any();
-            return ready ? Results.Ok(new HealthStatus("ready")) : Results.StatusCode(503);
+            try
+            {
+                var canConnect = await db.Database.CanConnectAsync();
+                if (!canConnect)
+                    return Results.StatusCode(503);
+
+                await db.Database.ExecuteSqlRawAsync("SELECT 1");
+                return Results.Ok(new HealthStatus("ready"));
+            }
+            catch
+            {
+                return Results.StatusCode(503);
+            }
         });
     }
 }

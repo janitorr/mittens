@@ -4,9 +4,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <PublishAot>true</PublishAot>
-    <StripSymbolsAfterPublish>true</StripSymbolsAfterPublish>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
+    <StripSymbolsAfterPublish Condition="'$(Configuration)' == 'Release'">true</StripSymbolsAfterPublish>
+    <InvariantGlobalization Condition="'$(Configuration)' == 'Release'">true</InvariantGlobalization>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NoWarn>$(NoWarn);IL2026;IL3050;CA1861</NoWarn>
@@ -17,11 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" Version="2.16.5" />
   </ItemGroup>
 
 </Project>
