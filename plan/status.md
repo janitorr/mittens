@@ -1,12 +1,11 @@
 # Implementation Status
 
 - [x] Step 1: Create project skeleton (AOT, net10.0, SQLite packages)
-- [x] Step 2: Data model & DbContext + migrations
+- [x] Step 2: Data model & DbContext (inline SQL — no EF migrations)
   - [x] `Models/MemoryFact.cs` entity
   - [x] `Data/AppDbContext.cs` with indexes + unique constraint
   - [x] `Data/Compiled/` EF Core compiled model (AOT-safe)
-  - [x] `Data/AppDbContextFactory.cs` design-time factory
-  - [x] Initial migration created
+  - [x] Inline DDL in `Program.cs:38-52` — `CREATE TABLE IF NOT EXISTS` + indexes
 - [x] Step 3: Validation (domain logic in Models/)
   - [x] `Models/MemoryFactValidator.cs` — all validation + conflict resolution
   - [x] `Models/ValidationError.cs` — result type

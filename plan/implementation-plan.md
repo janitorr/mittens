@@ -9,8 +9,7 @@
 - Write `Models/MemoryFact.cs` — entity with 9 properties, data annotations
 - Write `Data/AppDbContext.cs` — `OnModelCreating` for indexes + unique constraint
 - Write `Data/Compiled/` — EF Core compiled model (AOT requirement, 4 auto-generated files)
-- Create initial migration: `dotnet ef migrations add InitialCreate`
-- Write `Data/AppDbContextFactory.cs` — design-time factory for EF CLI tooling
+- ~~Create initial migration~~ → Use inline SQL in `Program.cs` (`CREATE TABLE IF NOT EXISTS` + indexes) instead, because `MigrateAsync()` is not AOT-compatible
 
 ## Step 3: Validation (domain logic)
 - Write `Models/MemoryFactValidator.cs` — static validation class with source-generated regex:

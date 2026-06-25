@@ -114,12 +114,6 @@ dotnet test tests/AotMemoryServer.Tests.Unit
 
 # Run integration tests
 dotnet test tests/AotMemoryServer.Tests.Integration
-
-# Add a migration
-dotnet ef migrations add <Name> --project src/AotMemoryServer
-
-# Apply migrations
-dotnet ef database update --project src/AotMemoryServer
 ```
 
 ## License
