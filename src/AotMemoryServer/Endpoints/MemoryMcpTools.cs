@@ -36,7 +36,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("List memory facts with optional filtering and pagination")]
+    [Description("List memory facts with optional filtering and pagination. Use when the user asks 'do you remember?', 'what did I tell you about X?', 'what do you know about X?', or wants to recall what's stored.")]
     public async Task<string> MemoryList(
         [Description("Filter by category (preference, fact, concept, rule, plan, goal, task, note)")]
         string? category = null,
@@ -54,7 +54,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Get a single memory fact by ID")]
+    [Description("Get a single memory fact by ID. Use when you need the full details of a specific fact you already know the ID of.")]
     public async Task<string> MemoryGet(
         [Description("Fact ID")] int id)
     {
@@ -63,7 +63,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Search memory facts by keyword in key and value fields")]
+    [Description("Search memory facts by keyword in key and value fields. Use when the user asks 'do you remember?', 'what did I tell you about X?', 'what do you know about X?', or wants to recall stored context but you're not sure of the exact key.")]
     public async Task<string> MemorySearch(
         [Description("Search keyword")] string q,
         [Description("Filter by category")]
@@ -80,7 +80,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Create or replace a memory fact. If a fact with the same category/key/scope exists, the one with higher confidence wins. Returns the stored fact.")]
+    [Description("Create or replace a memory fact. If a fact with the same category/key/scope exists, the one with higher confidence wins. Returns the stored fact. Use when the user says 'remember', 'save that', 'note this', 'keep this for later', 'store this', or instructs you to save information.")]
     public async Task<string> MemorySet(
         [Description("Category (preference, fact, concept, rule, plan, goal, task, note)")]
         string category,
@@ -110,7 +110,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Update an existing memory fact by ID. Only provided fields are changed.")]
+    [Description("Update an existing memory fact by ID. Only provided fields are changed. Use when the user wants to change, correct, or update something already stored.")]
     public async Task<string> MemoryUpdate(
         [Description("Fact ID to update")] int id,
         [Description("New category")]
@@ -148,7 +148,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Delete a memory fact by ID")]
+    [Description("Delete a memory fact by ID. Use when the user says 'forget', 'remove', 'delete that memory', or wants something removed from storage.")]
     public async Task<string> MemoryDelete(
         [Description("Fact ID to delete")] int id)
     {
