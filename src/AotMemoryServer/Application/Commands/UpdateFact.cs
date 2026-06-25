@@ -20,14 +20,9 @@ public sealed partial class UpdateFactHandler(AppDbContext db, ILogger<UpdateFac
         if (existing is null)
             return null;
 
-        existing.Category = command.Fact.Category;
-        existing.Key = command.Fact.Key;
-        existing.Value = command.Fact.Value;
-        existing.Scope = command.Fact.Scope;
-        existing.Confidence = command.Fact.Confidence;
-        existing.Source = command.Fact.Source;
-        existing.IsDeprecated = command.Fact.IsDeprecated;
-        existing.UpdatedAt = DateTime.UtcNow.ToString("O");
+        command.Fact.Id = existing.Id;
+        command.Fact.UpdatedAt = DateTime.UtcNow.ToString("O");
+        db.Entry(existing).CurrentValues.SetValues(command.Fact);
 
         await db.SaveChangesAsync();
         Log.Updated(logger, existing.Id, existing.Category, existing.Key, existing.Scope);
