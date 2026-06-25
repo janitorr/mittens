@@ -18,14 +18,14 @@
 - [x] Step 5: REST endpoints
   - [x] `Endpoints/MemoryEndpoints.cs` — CRUD routes under `/api/memory`
   - [x] `Endpoints/HealthEndpoints.cs` — `/api/health`, `/api/ready`
-- [ ] Step 6: MCP endpoint
-- [ ] Step 7: Wire everything in Program.cs
+- [x] Step 6: MCP endpoint
+- [x] Step 7: Wire everything in Program.cs
   - [x] Handler DI registration
   - [x] DbContext registration
-  - [ ] Kestrel binding from env/args
-  - [ ] Apply migrations on startup
-  - [ ] Map endpoint groups (REST, Health, MCP)
-  - [ ] JSON source generator for AOT
+  - [x] Kestrel binding from env/args
+  - [x] Apply migrations on startup
+  - [x] Map endpoint groups (REST, Health, MCP)
+  - [x] JSON source generator for AOT
 - [ ] Step 8: Dockerfile
 - [ ] Step 9: docker-compose.yml
 - [ ] Step 10: Tests

@@ -1,7 +1,8 @@
-using AotMemoryServer.Models;
 using AotMemoryServer.Application.Abstractions;
 using AotMemoryServer.Application.Commands;
 using AotMemoryServer.Application.Queries;
+using AotMemoryServer.Application.Serialization;
+using AotMemoryServer.Models;
 
 
 namespace AotMemoryServer.Endpoints;
@@ -40,7 +41,7 @@ public static class MemoryEndpoints
             }
             catch (ValidationException ex)
             {
-                return Results.BadRequest(new { errors = ex.Errors });
+                return Results.BadRequest(new ErrorResponse(ex.Errors));
             }
         });
 
@@ -56,7 +57,7 @@ public static class MemoryEndpoints
             }
             catch (ValidationException ex)
             {
-                return Results.BadRequest(new { errors = ex.Errors });
+                return Results.BadRequest(new ErrorResponse(ex.Errors));
             }
         });
 
