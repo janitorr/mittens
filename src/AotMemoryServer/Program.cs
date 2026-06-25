@@ -1,4 +1,5 @@
 using AotMemoryServer.Data;
+using AotMemoryServer.Endpoints;
 using AotMemoryServer.Models;
 using AotMemoryServer.Application.Abstractions;
 using AotMemoryServer.Application.Commands;
@@ -19,6 +20,8 @@ builder.Services.AddScoped<ICommandHandler<DeleteFact, bool>, DeleteFactHandler>
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapMemoryEndpoints();
+app.MapHealthEndpoints();
+app.MapMcpEndpoints();
 
 app.Run();
