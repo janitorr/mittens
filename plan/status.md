@@ -2,7 +2,7 @@
 
 - [x] Step 1: Create project skeleton
 - [x] Step 2: Data model & DbContext + migrations
-- [ ] Step 3: Validation service
+- [x] Step 3: Validation (domain logic in Models/)
 - [ ] Step 4: Memory service
 - [ ] Step 5: REST endpoints
 - [ ] Step 6: MCP endpoint
