@@ -1,7 +1,7 @@
 # Implementation Status
 
 - [x] Step 1: Create project skeleton
-- [ ] Step 2: Data model & DbContext + migrations
+- [x] Step 2: Data model & DbContext + migrations
 - [ ] Step 3: Validation service
 - [ ] Step 4: Memory service
 - [ ] Step 5: REST endpoints
