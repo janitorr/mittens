@@ -27,13 +27,4 @@ public sealed class HealthEndpointTests : IClassFixture<CustomWebApplicationFact
         Assert.Equal("healthy", doc.RootElement.GetProperty("status").GetString());
     }
 
-    [Fact]
-    public async Task Ready_ReturnsOk()
-    {
-        var response = await _client.GetAsync("/api/ready");
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.Equal("ready", doc.RootElement.GetProperty("status").GetString());
-    }
 }
