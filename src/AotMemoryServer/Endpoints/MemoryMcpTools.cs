@@ -20,7 +20,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("List memory facts with optional filtering and pagination. Use when the user asks 'do you remember?', 'what did I tell you about X?', 'what do you know about X?', or wants to recall what's stored.")]
+    [Description("Use when the user asks to browse stored information ('what do you remember?', 'list what you've stored'), or when memory_memory_search returns no results.")]
     public async Task<string> MemoryList(
         [Description("Filter by category (preference, fact, concept, rule, plan, goal, task, note)")]
         string? category = null,
@@ -47,7 +47,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Search memory facts by keyword in key and value fields. Use when the user asks 'do you remember?', 'what did I tell you about X?', 'what do you know about X?', or wants to recall stored context but you're not sure of the exact key.")]
+    [Description("Use whenever the user asks about their preferences, project context, past decisions, coding conventions, or past instructions — as well as recall requests like 'do you remember?' or 'what did I tell you about X?'. Always search before answering 'I don't know' to questions about the user's preferences or project setup.")]
     public async Task<string> MemorySearch(
         [Description("Search keyword")] string q,
         [Description("Filter by category")]
@@ -64,7 +64,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Create or replace a memory fact. If a fact with the same category/key/scope exists, the one with higher confidence wins. Returns the stored fact. Use when the user says 'remember', 'save that', 'note this', 'keep this for later', 'store this', or instructs you to save information.")]
+    [Description("Use when the user asks to save information ('remember', 'save that', 'note this', 'store this'), or shares preferences, conventions, or decisions that should persist across sessions. If a fact with the same category/key/scope exists, the one with higher confidence wins.")]
     public async Task<string> MemorySet(
         [Description("Category (preference, fact, concept, rule, plan, goal, task, note)")]
         string category,
@@ -94,7 +94,7 @@ public sealed class MemoryMcpTools
     }
 
     [McpServerTool]
-    [Description("Update an existing memory fact by ID. Only provided fields are changed. Use when the user wants to change, correct, or update something already stored.")]
+    [Description("Use when the user wants to modify a stored fact ('that's wrong', 'actually...', 'update that', 'change X'), or to refine something saved earlier. Requires the fact's ID from a prior search or list. Only provided fields are changed; omit fields to keep current values.")]
     public async Task<string> MemoryUpdate(
         [Description("Fact ID to update")] int id,
         [Description("New category")]
