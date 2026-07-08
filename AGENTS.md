@@ -16,6 +16,8 @@ dotnet run --project src/AotMemoryServer
 
 The server listens on `http://localhost:5070` and exposes MCP at `/mcp`.
 
+**Global config requirement:** Agent instructions only load if `~/.config/opencode/AGENTS.md` exists and `~/.config/opencode/opencode.json` registers `"instructions": ["memory-server.md"]` (relative path). See SETUP.md.
+
 ## Session Protocol — READ THIS FIRST
 
 ### Every Session Start

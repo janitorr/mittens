@@ -156,6 +156,26 @@ Then register the instruction file in the global `~/.config/opencode/opencode.js
 
 The `AGENTS.template.md` file contains tool-usage guidance so future LLM sessions know how to use the memory server's tools. With global instructions, every project benefits from a single file — no per-project copies needed.
 
+## Step 5: Create Global AGENTS.md Stub
+
+OpenCode requires a global `~/.config/opencode/AGENTS.md` file to exist for the `instructions` field to load. This file is a minimal stub that tells the model to defer to project-level `AGENTS.md` files.
+
+Check if the file exists:
+
+```bash
+test -f ~/.config/opencode/AGENTS.md && echo "EXISTS" || echo "MISSING"
+```
+
+**If the file does not exist:** Create it with the following content:
+
+```markdown
+# Global Rules
+
+Project-specific rules should be defined in each project's `AGENTS.md`.
+```
+
+**If the file exists:** Skip this step. Do not modify or overwrite it — it may already contain global instructions or the same stub.
+
 ## Step 6: Verify the Setup
 
 Test that everything works end-to-end:
@@ -214,6 +234,8 @@ Edit `~/.config/opencode/opencode.json` to remove the memory server entries:
 **If `mcp.memory` is not present:** Skip the MCP cleanup step.
 
 **If `memory-server.md` is not in the `instructions` array:** Skip the instructions cleanup step.
+
+**Note:** `~/.config/opencode/AGENTS.md` is a generic global-rules stub, not memory-server-specific. Do **not** remove it — it is shared by all global instructions and enables the `instructions` mechanism for any future use.
 
 ### Step 4: Remove the Docker Compose File (Optional)
 
