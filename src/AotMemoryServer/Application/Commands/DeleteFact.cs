@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Mediator;
 using AotMemoryServer.Data;
 using AotMemoryServer.Application.Abstractions;
@@ -12,9 +11,7 @@ public sealed partial class DeleteFactHandler(AppDbContext db, ILogger<DeleteFac
 {
     public async ValueTask<bool> Handle(DeleteFact command, CancellationToken cancellationToken)
     {
-        var existing = await db.MemoryFacts
-            .FromSqlRaw(MemoryFactSql.GetById, command.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+        var existing = await FactReader.GetByIdAsync(db, command.Id, cancellationToken);
 
         if (existing is null)
             return false;

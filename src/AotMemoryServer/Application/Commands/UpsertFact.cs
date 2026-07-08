@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Mediator;
 using AotMemoryServer.Data;
 using AotMemoryServer.Models;
@@ -17,9 +16,7 @@ public sealed partial class UpsertFactHandler(AppDbContext db, ILogger<UpsertFac
         if (errors.Any(e => !e.IsWarning))
             throw new ValidationException(errors);
 
-        var existing = await db.MemoryFacts
-            .FromSqlRaw(MemoryFactSql.GetByCategoryKeyScope, command.Fact.Category, command.Fact.Key, command.Fact.Scope)
-            .SingleOrDefaultAsync(cancellationToken);
+        var existing = await FactReader.GetByCategoryKeyScopeAsync(db, command.Fact.Category, command.Fact.Key, command.Fact.Scope, cancellationToken);
 
         if (existing is not null)
         {

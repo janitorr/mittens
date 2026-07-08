@@ -1,3 +1,5 @@
+using System.Data;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using AotMemoryServer.Models;
 
@@ -8,10 +10,28 @@ public static class FactWriter
     public static async Task<MemoryFact> InsertAsync(AppDbContext db, MemoryFact fact, CancellationToken ct)
     {
         fact.UpdatedAt = DateTimeOffset.UtcNow;
-        var parameters = new object?[] { fact.Category, fact.Key, fact.Value, fact.Scope, fact.Confidence, fact.Source, fact.UpdatedAt, fact.IsDeprecated };
-        await db.Database.ExecuteSqlRawAsync(MemoryFactSql.InsertFact, parameters!, ct);
-        var id = await db.Database.SqlQueryRaw<int>(MemoryFactSql.GetLastInsertRowId).SingleAsync(ct);
-        fact.Id = id;
+
+        var conn = db.Database.GetDbConnection();
+        if (conn.State != ConnectionState.Open)
+            await conn.OpenAsync(ct);
+
+        await using var cmd = conn.CreateCommand();
+        cmd.CommandText = """
+            INSERT INTO "MemoryFacts" ("Category", "Key", "Value", "Scope", "Confidence", "Source", "UpdatedAt", "IsDeprecated")
+            VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+            SELECT last_insert_rowid();
+            """;
+        cmd.Parameters.Add(new SqliteParameter("@p0", fact.Category));
+        cmd.Parameters.Add(new SqliteParameter("@p1", fact.Key));
+        cmd.Parameters.Add(new SqliteParameter("@p2", fact.Value));
+        cmd.Parameters.Add(new SqliteParameter("@p3", fact.Scope));
+        cmd.Parameters.Add(new SqliteParameter("@p4", fact.Confidence));
+        cmd.Parameters.Add(new SqliteParameter("@p5", fact.Source ?? (object)DBNull.Value));
+        cmd.Parameters.Add(new SqliteParameter("@p6", fact.UpdatedAt.ToString("O")));
+        cmd.Parameters.Add(new SqliteParameter("@p7", fact.IsDeprecated));
+
+        var id = await cmd.ExecuteScalarAsync(ct);
+        fact.Id = id is long l ? (int)l : 0;
         return fact;
     }
 
