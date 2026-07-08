@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Mediator;
 using AotMemoryServer.Data;
 using AotMemoryServer.Models;
@@ -16,7 +17,9 @@ public sealed partial class UpdateFactHandler(AppDbContext db, ILogger<UpdateFac
         if (errors.Any(e => !e.IsWarning))
             throw new ValidationException(errors);
 
-        var existing = await CompiledQueries.GetByIdAsync(db, command.Id);
+        var existing = await db.MemoryFacts
+            .FromSqlRaw(MemoryFactSql.GetById, command.Id)
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (existing is null)
             return null;

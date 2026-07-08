@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Mediator;
 using AotMemoryServer.Data;
 using AotMemoryServer.Models;
@@ -10,6 +11,8 @@ public sealed class GetFactByIdHandler(AppDbContext db) : IRequestHandler<GetFac
 {
     public async ValueTask<MemoryFact?> Handle(GetFactById query, CancellationToken cancellationToken)
     {
-        return await CompiledQueries.GetByIdAsync(db, query.Id);
+        return await db.MemoryFacts
+            .FromSqlRaw(MemoryFactSql.GetById, query.Id)
+            .SingleOrDefaultAsync(cancellationToken);
     }
 }

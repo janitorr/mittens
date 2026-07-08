@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Mediator;
 using AotMemoryServer.Data;
 using AotMemoryServer.Models;
@@ -15,9 +16,14 @@ public sealed class GetFactsHandler(AppDbContext db) : IRequestHandler<GetFacts,
         var page = Math.Max(1, query.Page);
         var pageSize = Math.Max(1, Math.Min(100, query.PageSize));
 
-        var totalCount = await CompiledQueries.GetFactsCountAsync(db, query.Category, query.Scope, query.Key);
+        var totalCount = await db.Database
+            .SqlQueryRaw<int>(MemoryFactSql.GetFactsCount, (object?)query.Category ?? DBNull.Value, (object?)query.Scope ?? DBNull.Value, (object?)query.Key ?? DBNull.Value)
+            .SingleAsync(cancellationToken);
+
         var offset = (page - 1) * pageSize;
-        var items = await CompiledQueries.GetFactsPageAsync(db, query.Category, query.Scope, query.Key, pageSize, offset);
+        var items = await db.MemoryFacts
+            .FromSqlRaw(MemoryFactSql.GetFactsPage, (object?)query.Category ?? DBNull.Value, (object?)query.Scope ?? DBNull.Value, (object?)query.Key ?? DBNull.Value, pageSize, offset)
+            .ToListAsync(cancellationToken);
 
         return new PagedResult<MemoryFact>(items, totalCount, page, pageSize);
     }
