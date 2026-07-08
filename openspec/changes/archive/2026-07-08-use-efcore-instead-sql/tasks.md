@@ -24,4 +24,4 @@
 - [x] 5.1 Build and run `dotnet publish -c Release` — AOT/trimming succeeds with compiled queries + compiled model.
 - [x] 5.2 All 59 tests pass (33 unit + 26 integration), confirming REST/MCP parity, pagination, conflict resolution, and unique constraint behavior.
 - [x] 5.3 No regressions in pagination, conflict resolution, unique-constraint behavior, or validation.
-- [ ] 5.4 Bump version with a semver tag per AGENTS.md after CI passes.
+- [x] 5.4 Bump version with a semver tag per AGENTS.md after CI passes (tagged `v1.0.2`).
