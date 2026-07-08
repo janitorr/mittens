@@ -157,9 +157,9 @@ docker compose -f docker-compose.example.yml up -d
 
 The server listens at `http://localhost:5070`.
 
-### 2. Configure opencode
+### 2. Configure opencode (global)
 
-Add this to your project's `opencode.json`:
+Add the memory server to your global OpenCode configuration at `~/.config/opencode/opencode.json`:
 
 ```json
 {
@@ -174,19 +174,32 @@ Add this to your project's `opencode.json`:
 }
 ```
 
-### 3. Add agent instructions
+If the file does not exist, create it. If it already has other MCP servers, add the `memory` entry alongside them.
 
-Download [`AGENTS.template.md`](AGENTS.template.md) into your project root as `AGENTS.md`:
+### 3. Add agent instructions (global)
+
+Download [`AGENTS.template.md`](AGENTS.template.md) as `memory-server.md` in your global OpenCode configuration directory:
 
 ```bash
-curl -o AGENTS.md https://raw.githubusercontent.com/janitorr/aot-memory-server/main/AGENTS.template.md
+mkdir -p ~/.config/opencode
+curl -o ~/.config/opencode/memory-server.md https://raw.githubusercontent.com/janitorr/aot-memory-server/main/AGENTS.template.md
 ```
 
-It tells opencode agents about available tools, categories, scope conventions, and startup — so they know when and how to use the memory server.
+Then add `"memory-server.md"` to the `instructions` array in `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "instructions": ["memory-server.md"]
+}
+```
+
+If `instructions` already exists with other entries, append `memory-server.md` to the array. OpenCode resolves instruction paths relative to the config file directory.
+
+For a complete step-by-step install and uninstall guide (including merge guidance for existing configs), see [`SETUP.md`](SETUP.md).
 
 ### Agent setup instructions
 
-If you are an AI agent helping a user install this memory server for their project, read [`SETUP.md`](SETUP.md) for the complete step-by-step installation guide.
+If you are an AI agent helping a user install this memory server, read [`SETUP.md`](SETUP.md) for the complete step-by-step installation guide.
 
 ## License
 

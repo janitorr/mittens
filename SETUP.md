@@ -4,12 +4,12 @@ You are an LLM assisting a user in setting up the AOT Memory Server for their pr
 
 ## Overview
 
-The AOT Memory Server is a lightweight, AOT-compiled persistent memory store for AI agents. It provides REST and MCP APIs backed by SQLite. This guide walks you through a complete installation for any target project.
+The AOT Memory Server is a lightweight, AOT-compiled persistent memory store for AI agents. It provides REST and MCP APIs backed by SQLite. This guide walks you through a complete installation using global OpenCode configuration, so every project benefits without modifying any project files.
 
 **What you will set up:**
 - A Docker container running the memory server on port 5070
-- MCP configuration for the user's AI client (OpenCode or Claude Desktop)
-- Agent instructions so future LLM sessions know how to use memory tools
+- Global MCP configuration in `~/.config/opencode/opencode.json`
+- Global agent instructions in `~/.config/opencode/memory-server.md`
 
 ## Prerequisites
 
@@ -88,16 +88,19 @@ You should receive a `200 OK` response. If you get a connection error or non-200
 2. Look for port binding errors or startup failures
 3. See the Troubleshooting section below for common issues
 
-## Step 3: Configure the MCP Client
+## Step 3: Configure MCP — Global OpenCode Configuration
 
 Configure the user's AI client to connect to the memory server.
 
-### Option A: OpenCode (`opencode.json`)
+### Option A: OpenCode (global `~/.config/opencode/opencode.json`)
 
-Add or merge the following into the project's `opencode.json`:
+Check for the global OpenCode configuration file at `~/.config/opencode/opencode.json`:
+
+**If the file does not exist:** Create it with the following content:
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "memory": {
       "type": "remote",
@@ -108,7 +111,11 @@ Add or merge the following into the project's `opencode.json`:
 }
 ```
 
-**Merge guidance:** If `opencode.json` already has an `mcp` section, add the `memory` entry alongside any existing MCP servers. Do not overwrite other configurations. If `$schema` is present, preserve it.
+**If the file exists without an `mcp` section:** Add the `mcp` section with the `memory` entry, preserving all existing config.
+
+**If the file exists with other MCP servers:** Add the `memory` entry alongside existing servers. Do not modify or remove other MCP server configurations.
+
+**If `mcp.memory` is already registered:** Skip this step and inform the user that the memory server is already configured globally.
 
 ### Option B: Claude Desktop (`claude_desktop_config.json`)
 
@@ -125,32 +132,38 @@ Add the following to the user's Claude Desktop configuration file:
 }
 ```
 
-**Note:** Claude Desktop's MCP HTTP transport support may vary. If HTTP transport does not work, the user may need to use a stdio-based proxy. Refer to the MCP documentation for the latest guidance.
+**Note:** Claude Desktop's MCP HTTP transport support may vary. If HTTP transport does not work, the user may need to use a stdio-based proxy. Refer to the MCP documentation for the latest guidance. Tool guidance for Claude Desktop is deferred — the MCP registration above provides tool descriptions but not the detailed usage guidance that OpenCode receives via the global `instructions` field.
 
 **Merge guidance:** If `claude_desktop_config.json` already has an `mcpServers` section, add the `aot-memory-server` entry without removing existing servers.
 
-## Step 4: Install Agent Instructions
+## Step 4: Install Agent Instructions (Global)
 
-Fetch the agent instructions template and install it in the target project:
+Fetch the agent instructions template and place it in the global OpenCode configuration directory:
 
 ```bash
-curl -o AGENTS.md https://raw.githubusercontent.com/janitorr/aot-memory-server/main/AGENTS.template.md
+mkdir -p ~/.config/opencode
+curl -o ~/.config/opencode/memory-server.md https://raw.githubusercontent.com/janitorr/aot-memory-server/main/AGENTS.template.md
 ```
 
-**If the project already has an `AGENTS.md`:** Ask the user whether to:
-1. Overwrite the existing file
-2. Merge the content (you will need to read both files and combine them)
-3. Skip this step
+Then register the instruction file in the global `~/.config/opencode/opencode.json`. Check the existing config:
 
-The `AGENTS.template.md` file contains tool-usage guidance so future LLM sessions know how to use the memory server's tools.
+**If the global config has no `instructions` key:** Add `"instructions": ["memory-server.md"]` to the config. OpenCode resolves instruction file paths relative to the config file directory, so `"memory-server.md"` resolves to `~/.config/opencode/memory-server.md`.
 
-## Step 5: Verify the Setup
+**If the global config has an `instructions` array with other entries:** Append `"memory-server.md"` to the array if it is not already present. Preserve all existing entries.
+
+**If `memory-server.md` is already in the `instructions` array:** Skip this step and inform the user that the instructions are already registered globally.
+
+The `AGENTS.template.md` file contains tool-usage guidance so future LLM sessions know how to use the memory server's tools. With global instructions, every project benefits from a single file — no per-project copies needed.
+
+## Step 6: Verify the Setup
 
 Test that everything works end-to-end:
 
-1. **Verify MCP tools are available:** Use your tool discovery mechanism to confirm `memory_set` and `memory_list` appear in the available tools.
+1. **Verify MCP tools are available globally:** The memory MCP tools (`memory_set`, `memory_list`, etc.) should appear in your available tools regardless of which project directory you are in, since the MCP server is registered in the global OpenCode configuration.
 
-2. **Test memory persistence:**
+2. **Verify global instructions are loaded:** Confirm that the memory server usage guidance from `~/.config/opencode/memory-server.md` is present in your system prompt. You should see documentation about categories, scope conventions, and when to use memory tools.
+
+3. **Test memory persistence:**
    - Call `memory_set` with a test fact:
      - category: `note`
      - key: `setup-test`
@@ -158,9 +171,58 @@ Test that everything works end-to-end:
      - scope: `project`
    - Call `memory_list` and confirm the test fact appears in the results
 
-3. **Clean up the test fact:** Call `memory_delete` with the ID of the test fact you just created.
+4. **Clean up the test fact:** Call `memory_delete` with the ID of the test fact you just created.
 
 If all steps succeed, the setup is complete.
+
+## Uninstall
+
+To completely remove the AOT Memory Server and all its configuration, follow these steps in order.
+
+### Step 1: Stop and Remove the Docker Container
+
+```bash
+docker compose -f docker-compose.memory.yml down -v
+```
+
+This stops the container and removes the named volume (`memory-data`), deleting all stored memory facts. **Confirm with the user before running this command** — data cannot be recovered.
+
+**Optional: Remove the Docker image**
+
+```bash
+docker rmi janitorr/aot-memory-server:latest
+```
+
+This frees up disk space but is not required. The image will be re-pulled if the user reinstalls.
+
+### Step 2: Remove the Instruction File
+
+```bash
+rm ~/.config/opencode/memory-server.md
+```
+
+### Step 3: Clean Up Global OpenCode Configuration
+
+Edit `~/.config/opencode/opencode.json` to remove the memory server entries:
+
+1. Remove the `memory` entry from the `mcp` section. If `mcp` becomes empty after removal, you may remove the entire `mcp` section.
+2. Remove `"memory-server.md"` from the `instructions` array. If `instructions` becomes empty after removal, you may remove the entire `instructions` section.
+
+**Warning:** Preserve all other MCP servers and instruction entries. Only remove entries related to the memory server. Do not modify or remove other configurations.
+
+**If `mcp.memory` is not present:** Skip the MCP cleanup step.
+
+**If `memory-server.md` is not in the `instructions` array:** Skip the instructions cleanup step.
+
+### Step 4: Remove the Docker Compose File (Optional)
+
+```bash
+rm docker-compose.memory.yml
+```
+
+This removes the compose file from the project root. Only do this if the user no longer needs it for reference.
+
+After completing these steps, the memory server is fully uninstalled.
 
 ## Troubleshooting
 
