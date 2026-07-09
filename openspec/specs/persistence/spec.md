@@ -61,13 +61,23 @@ The system SHALL use source-generated regex (GeneratedRegex attribute) for secre
 
 ### Requirement: Raw SQL in handlers (no LINQ query translation)
 The system SHALL use raw SQL for fact persistence in CQRS handlers for AOT compatibility (no EF Core
-runtime LINQ query translation). SQL SHALL be executed through EF Core's AOT-safe source-generated
-compiled queries (`EF.CompileAsyncQuery` with `FromSql` for reads, `ExecuteSql`/`ExecuteSqlAsync` for
-writes) rather than direct `Microsoft.Data.Sqlite` `SqliteCommand` usage.
+runtime LINQ query translation). SQL SHALL be executed directly through EF Core via `FromSqlRaw` (for
+entity reads) and `SqlQueryRaw`/`SqlQueryRaw<int>` (for counts) on the `DbContext`/`DatabaseFacade` —
+NOT via `EF.CompileAsyncQuery` + `FromSql`/`FromSqlRaw` on `DbSet<T>` (unsupported in EF Core 10;
+throws `ArgumentException` at runtime). No `Microsoft.Data.Sqlite` `SqliteCommand` usage.
 
-#### Scenario: Handlers use EF compiled queries
+#### Scenario: Handlers use EF raw SQL directly
 - **WHEN** GetFactsHandler, SearchFactsHandler, GetFactByIdHandler, UpsertFactHandler, UpdateFactHandler, DeleteFactHandler execute
-- **THEN** they execute raw SQL via `EF.CompileAsyncQuery`/`FromSql`/`ExecuteSql` (no runtime LINQ translation, no `SqliteCommand`)
+- **THEN** they call `FromSqlRaw`/`SqlQueryRaw` directly (no runtime LINQ translation, no `SqliteCommand`, no `EF.CompileAsyncQuery`)
+
+### Requirement: AOT correctness verified by integration tests
+The system SHALL verify AOT/trimming correctness by running the integration test suite against the
+Release build (`dotnet build -c Release`), not only a Debug build, because `dotnet publish -c Release`
+does not execute queries and can mask runtime SQL errors.
+
+#### Scenario: Release integration run
+- **WHEN** CI builds in the Release configuration
+- **THEN** integration tests execute against a real SQLite database and must pass
 
 ### Requirement: Schema created via EF on startup
 The system SHALL create the MemoryFacts table and indexes on startup using inline DDL executed through
@@ -76,4 +86,15 @@ EF Core (`db.Database.ExecuteSqlRawAsync`), with no EF migrations.
 #### Scenario: Startup applies DDL via EF
 - **WHEN** the application starts
 - **THEN** the MemoryFacts table and unique (Category, Key, Scope) index are created if not present via `ExecuteSqlRawAsync`
+
+### Requirement: No raw ADO.NET in Data layer
+The system SHALL NOT use `Microsoft.Data.Sqlite` `SqliteConnection`, `SqliteCommand`, or `SqliteDataReader` in the `Data/` directory. All data access SHALL go through EF Core's `FromSqlRaw`, `SqlQueryRaw`, or `ExecuteSqlInterpolatedAsync` APIs.
+
+#### Scenario: Data layer uses EF Core raw SQL only
+- **WHEN** FactReader or FactWriter executes any data access operation
+- **THEN** they use `FromSqlRaw`, `SqlQueryRaw`, or `ExecuteSqlInterpolatedAsync` — no raw ADO.NET
+
+#### Scenario: No Microsoft.Data.Sqlite in Data directory
+- **WHEN** the `Data/` directory is inspected
+- **THEN** no files contain `using Microsoft.Data.Sqlite` or `SqliteConnection`/`SqliteCommand`/`SqliteDataReader`
 

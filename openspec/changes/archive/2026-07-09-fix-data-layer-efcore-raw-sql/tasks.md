@@ -26,4 +26,4 @@
 
 ## 5. Version bump
 
-- [ ] 5.1 Bump version with a PATCH semver tag per AGENTS.md (e.g., `v1.0.4`) after CI passes
+- [x] 5.1 Bump version with a PATCH semver tag per AGENTS.md (e.g., `v1.0.4`) after CI passes
