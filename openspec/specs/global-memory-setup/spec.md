@@ -24,7 +24,7 @@ The SETUP.md guide SHALL instruct the LLM to write the memory server agent instr
 
 #### Scenario: Fetch and place instruction file
 - **WHEN** the LLM follows the setup guide
-- **THEN** it fetches `AGENTS.template.md` from the repo and writes it to `~/.config/opencode/memory-server.md`
+- **THEN** it fetches `setup/AGENTS.template.md` from the repo and writes it to `~/.config/opencode/memory-server.md`
 
 #### Scenario: Global config has no instructions array
 - **WHEN** the global config exists but has no `instructions` key

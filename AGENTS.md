@@ -16,7 +16,7 @@ dotnet run --project src/Mittens
 
 The server listens on `http://localhost:5070` and exposes MCP at `/mcp`.
 
-**Global config requirement:** Agent instructions only load if `~/.config/opencode/AGENTS.md` exists and `~/.config/opencode/opencode.json` registers `"instructions": ["mittens.md"]` (relative path). See SETUP.md.
+**Global config requirement:** Agent instructions only load if `~/.config/opencode/AGENTS.md` exists and `~/.config/opencode/opencode.json` registers `"instructions": ["mittens.md"]` (relative path). See setup/SETUP.md.
 
 ## Session Protocol — READ THIS FIRST
 

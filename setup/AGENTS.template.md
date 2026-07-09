@@ -87,7 +87,7 @@ The server must be running before you can use its tools. If you get connection e
 
 ```bash
 # If docker-compose.memory.yml doesn't exist, create it first:
-curl -O https://raw.githubusercontent.com/janitorr/mittens/main/docker-compose.example.yml
+curl -O https://raw.githubusercontent.com/janitorr/mittens/main/setup/docker-compose.example.yml
 mv docker-compose.example.yml docker-compose.memory.yml
 
 # Then start:

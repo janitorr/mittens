@@ -143,7 +143,7 @@ Fetch the agent instructions template and place it in the global OpenCode config
 
 ```bash
 mkdir -p ~/.config/opencode
-curl -o ~/.config/opencode/mittens.md https://raw.githubusercontent.com/janitorr/mittens/main/AGENTS.template.md
+curl -o ~/.config/opencode/mittens.md https://raw.githubusercontent.com/janitorr/mittens/main/setup/AGENTS.template.md
 ```
 
 Then register the instruction file in the global `~/.config/opencode/opencode.json`. Check the existing config:

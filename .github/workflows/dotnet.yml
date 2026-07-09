@@ -7,10 +7,13 @@ on:
     paths-ignore:
       - '**/*.md'
       - 'openspec/**'
+      - 'setup/**'
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - '**/*.md'
+      - 'openspec/**'
+      - 'setup/**'
   workflow_dispatch:
 
 jobs:

@@ -71,7 +71,7 @@ docker compose down -v
 
 The container stores the SQLite database in a named volume (`mittens-data`), so data persists across restarts. Works on Linux, macOS, and Windows (Docker Desktop).
 
-For an LLM-assisted setup in your own project, see [`SETUP.md`](SETUP.md).
+For an LLM-assisted setup in your own project, see [`SETUP.md`](setup/SETUP.md).
 
 ## API Summary
 
@@ -161,17 +161,17 @@ dotnet test tests/Mittens.Tests.Integration
 
 ### 1. Run the server
 
-Copy [`docker-compose.example.yml`](docker-compose.example.yml) into your project and start it:
+Copy [`docker-compose.example.yml`](setup/docker-compose.example.yml) into your project and start it:
 
 ```bash
-docker compose -f docker-compose.example.yml up -d
+docker compose -f setup/docker-compose.example.yml up -d
 ```
 
 Or download it directly:
 
 ```bash
-curl -O https://raw.githubusercontent.com/janitorr/mittens/main/docker-compose.example.yml
-docker compose -f docker-compose.example.yml up -d
+curl -O https://raw.githubusercontent.com/janitorr/mittens/main/setup/docker-compose.example.yml
+docker compose -f setup/docker-compose.example.yml up -d
 ```
 
 The server listens at `http://localhost:5070`.
@@ -197,11 +197,11 @@ If the file does not exist, create it. If it already has other MCP servers, add 
 
 ### 3. Add agent instructions (global)
 
-Download [`AGENTS.template.md`](AGENTS.template.md) as `memory-server.md` in your global OpenCode configuration directory:
+Download [`AGENTS.template.md`](setup/AGENTS.template.md) as `memory-server.md` in your global OpenCode configuration directory:
 
 ```bash
 mkdir -p ~/.config/opencode
-curl -o ~/.config/opencode/memory-server.md https://raw.githubusercontent.com/janitorr/mittens/main/AGENTS.template.md
+curl -o ~/.config/opencode/memory-server.md https://raw.githubusercontent.com/janitorr/mittens/main/setup/AGENTS.template.md
 ```
 
 Then add `"memory-server.md"` to the `instructions` array in `~/.config/opencode/opencode.json`:
@@ -214,11 +214,11 @@ Then add `"memory-server.md"` to the `instructions` array in `~/.config/opencode
 
 If `instructions` already exists with other entries, append `memory-server.md` to the array. OpenCode resolves instruction paths relative to the config file directory.
 
-For a complete step-by-step install and uninstall guide (including merge guidance for existing configs), see [`SETUP.md`](SETUP.md).
+For a complete step-by-step install and uninstall guide (including merge guidance for existing configs), see [`SETUP.md`](setup/SETUP.md).
 
 ### Agent setup instructions
 
-If you are an AI agent helping a user install this memory server, read [`SETUP.md`](SETUP.md) for the complete step-by-step installation guide.
+If you are an AI agent helping a user install this memory server, read [`SETUP.md`](setup/SETUP.md) for the complete step-by-step installation guide.
 
 ## License
 
