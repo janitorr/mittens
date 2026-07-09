@@ -4,7 +4,15 @@
     "memory": {
       "type": "remote",
       "url": "http://localhost:5070/mcp",
-      "enabled": true
+      "enabled": true,
+      "headers": {
+        "Accept": "application/json, text/event-stream"
+      }
+    }
+  },
+  "agent": {
+    "plan": {
+      "model": "opencode-go/deepseek-v4-pro"
     }
   }
 }
