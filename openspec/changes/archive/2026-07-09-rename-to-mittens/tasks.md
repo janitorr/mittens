@@ -59,13 +59,13 @@
 
 ## 9. Git and Release
 
-- [ ] 9.1 Create single commit with all rename changes
-- [ ] 9.2 Run `openspec validate rename-to-mittens` and fix any issues
-- [ ] 9.3 Tag and push as MAJOR version (e.g., `v2.0.0`)
+- [x] 9.1 Create single commit with all rename changes
+- [x] 9.2 Run `openspec validate rename-to-mittens` and fix any issues
+- [x] 9.3 Tag and push as MAJOR version (e.g., `v2.0.0`)
 
 ## 10. External — Manual Actions (Requires Owner Access)
 
-- [ ] 10.1 **Rename GitHub repository from `aot-memory-server` to `mittens`**
-- [ ] 10.2 **Create new Docker Hub repository `janitorr/mittens`**
-- [ ] 10.3 **Add deprecation notice to old Docker Hub repository `janitorr/aot-memory-server`**
-- [ ] 10.4 **Update any external links, badges, or references pointing to the old repository URL**
+- [x] 10.1 **Rename GitHub repository from `aot-memory-server` to `mittens`**
+- [x] 10.2 **Create new Docker Hub repository `janitorr/mittens`**
+- [x] 10.3 **Add deprecation notice to old Docker Hub repository `janitorr/aot-memory-server`**
+- [x] 10.4 **Update any external links, badges, or references pointing to the old repository URL**
