@@ -115,11 +115,14 @@ Use `/opsx-propose <change-name>` to start, `/opsx-continue` to iterate on artif
 
 Use [semver](https://semver.org) for versioning: `vMAJOR.MINOR.PATCH`.
 
-- **MAJOR** — breaking API or behavioral changes
-- **MINOR** — new features, backward compatible
-- **PATCH** — bug fixes, performance improvements, refactors
+| Change type | Bump | Examples |
+|---|---|---|
+| External contract change | **MAJOR** | REST API, MCP protocol, data format, CLI flags |
+| Behavior change | **MINOR** | New features, internal logic changes |
+| Implementation-only code change | **PATCH** | Bug fixes, refactors, performance improvements |
+| Specs or documentation only | **skip** | — |
 
-After every nontrivial change, determine the correct version bump, inspect the latest tag, and create a new one **before pushing**:
+Push commits and tag together:
 
 ```bash
 git fetch --tags
@@ -128,4 +131,4 @@ git tag v1.2.3 && git push origin v1.2.3 && git push origin main
 
 The CI pipeline will build, test, and push the Docker image to Docker Hub with tags `1.2.3`, `1.2`, and `latest`.
 
-Tag only from `main` after ensuring CI passes. **Always create the tag locally before pushing commits — pushing first then tagging breaks the release ordering.**
+Tag only from `main`. If CI fails, fix the issue and create a new tag — never move or delete a pushed tag.
