@@ -42,7 +42,7 @@ Every fact is a ledger entry with a category, key, value, scope, and confidence.
 
 ```bash
 # Run the server
-dotnet run --project src/Mittens
+dotnet run --project src/Mittens.Host
 
 # Run tests
 dotnet test
@@ -127,17 +127,20 @@ Configuration is managed through `appsettings.json` / `appsettings.Development.j
 ## Project Structure
 
 ```
-src/Mittens/
-├── Application/          # CQRS handlers, serialization, DTOs
-│   ├── Abstractions/     # Shared types (PagedResult, ValidationException)
-│   ├── Commands/         # Upsert, Update, Delete
-│   ├── Queries/          # GetFacts, GetFactById, SearchFacts
-│   └── Serialization/    # JSON serialization context and DTOs
-├── Data/                 # EF Core DbContext and compiled model
-│   └── Compiled/         # Precompiled EF Core model
-├── Endpoints/            # REST, Health, MCP endpoint definitions
-├── Models/               # MittensFact entity, validator, validation errors
-└── Program.cs            # Entry point, DI, middleware, routing
+src/Mittens.Core/           # Pure domain logic (models, interfaces, handlers)
+├── Fact/                   # Fact feature (commands, queries, interfaces)
+│   ├── Commands/           # Upsert, Update, Delete
+│   └── Queries/            # GetFacts, GetFactById, SearchFacts
+└── Shared/                 # Shared types (PagedResult, ValidationException)
+
+src/Mittens.Host/           # Web application shell (infrastructure, endpoints)
+├── Memory/                 # Fact feature infrastructure
+│   ├── Data/               # EF Core DbContext, reader/writer, compiled model
+│   │   └── Compiled/       # Precompiled EF Core model
+│   └── Endpoints/          # REST and MCP endpoint definitions
+├── Endpoints/              # Plumbing (health checks)
+├── Serialization/          # JSON serialization context and DTOs
+└── Program.cs              # Entry point, DI, routing
 
 tests/
 ├── Mittens.Tests.Unit/        # Validator & conflict resolution tests

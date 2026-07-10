@@ -6,7 +6,7 @@
 
 - .NET 10, ASP.NET Core minimal APIs
 - EF Core + SQLite (no migrations — inline DDL in `Program.cs`)
-- Compiled EF model (`Data/Compiled/`), source-generated JSON (`AppJsonContext`)
+- Compiled EF model (`Memory/Data/Compiled/`), source-generated JSON (`AppJsonContext`)
 - CQRS via `Mediator.SourceGenerator` (`IQueryHandler` / `ICommandHandler`)
 - MCP via `ModelContextProtocol.AspNetCore` (stateless HTTP at `/mcp`)
 - xUnit for tests
@@ -14,12 +14,12 @@
 ## Commands
 
 ```bash
-dotnet build                          # build
-dotnet test                           # all tests (unit + integration)
-dotnet test tests/Mittens.Tests.Unit  # unit only
-dotnet test tests/Mittens.Tests.Integration  # integration only
-dotnet run --project src/Mittens      # dev server on :5070
-dotnet publish -c Release             # AOT native binary (~33 MB)
+dotnet build                                    # build
+dotnet test                                     # all tests (unit + integration)
+dotnet test tests/Mittens.Tests.Unit            # unit only
+dotnet test tests/Mittens.Tests.Integration     # integration only
+dotnet run --project src/Mittens.Host           # dev server on :5070
+dotnet publish -c Release                       # AOT native binary (~39 MB)
 ```
 
 CI order: `restore → build → test → Release build → Release integration test`.
@@ -32,16 +32,36 @@ CI order: `restore → build → test → Release build → Release integration 
 - `NoWarn`: `IL2026`, `IL3050`, `CA1861` (AOT reflection warnings)
 - Use source generators, not runtime reflection. `InternalsVisibleTo` for integration tests.
 
+## AOT Data Access (Critical)
+
+EF Core `FromSqlRaw`/`SqlQueryRaw` **do not work** under NativeAOT — they go through the query compiler which requires runtime IL generation. All reads use `SqliteCommand` directly on `AppDbContext.Database.GetDbConnection()`. Writes use `ExecuteSqlInterpolatedAsync` (AOT-safe). Never use `FromSqlRaw`, `SqlQueryRaw`, `.ToListAsync()`, or `.FirstOrDefaultAsync()` on EF Core queries in this project.
+
 ## Architecture
 
 ```
-src/Mittens/
-├── Application/        # CQRS handlers, DTOs, serialization context
-├── Data/               # DbContext + Compiled/ (precompiled EF model)
-├── Endpoints/          # REST, Health, MCP endpoint definitions
-├── Models/             # MittensFact entity + validators
-└── Program.cs          # Entry point, DI, inline DDL, routing
+src/Mittens.Core/         # Pure domain logic (models, interfaces, handlers)
+├── Fact/                 # Fact feature (commands, queries, interfaces)
+│   ├── Commands/         # Upsert, Update, Delete
+│   └── Queries/          # GetFacts, GetFactById, SearchFacts
+└── Shared/               # Shared types (PagedResult, ValidationException)
+
+src/Mittens.Host/         # Web application shell
+├── Memory/               # Fact feature infrastructure
+│   ├── Data/             # DbContext, reader/writer, compiled model
+│   │   └── Compiled/     # Precompiled EF Core model
+│   └── Endpoints/        # REST and MCP endpoint definitions
+├── Endpoints/            # Plumbing (health checks)
+├── Serialization/        # JSON serialization context and DTOs
+└── Program.cs            # Entry point, DI, routing
 ```
+
+## Naming Conventions
+
+- Host project: `Mittens.Host` (assembly), root namespace `Mittens`
+- Core project: `Mittens.Core` (assembly + namespace)
+- Host feature folder is `Memory/` not `Fact/` — avoids collision with `Mittens.Core.Fact.Fact` type
+- Database table: `MittensFacts`, schema: `mittens`
+- Binary output: `Mittens.Host`
 
 ## OpenSpec Workflow
 

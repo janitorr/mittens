@@ -20,7 +20,7 @@ The root namespace SHALL be `Mittens` instead of `AotMemoryServer`. All sub-name
 
 #### Scenario: Assembly name matches namespace
 - **WHEN** the project is built
-- **THEN** the assembly name is `Mittens`
+- **THEN** the assembly name is `Mittens.Host`
 
 ### Requirement: Docker image and container names use "mittens"
 The Docker image SHALL be published as `janitorr/mittens`. Docker Compose service names, container names, and volume names SHALL use the `mittens` prefix.
@@ -33,15 +33,15 @@ The Docker image SHALL be published as `janitorr/mittens`. Docker Compose servic
 - **WHEN** a user runs `docker pull janitorr/mittens:latest`
 - **THEN** the image pulls successfully
 
-### Requirement: CLI binary is named "Mittens"
-The compiled AOT binary SHALL be named `Mittens` (or `Mittens.exe` on Windows). The `dotnet run` project path SHALL reference `src/Mittens`.
+### Requirement: CLI binary is named "Mittens.Host"
+The compiled AOT binary SHALL be named `Mittens.Host` (or `Mittens.Host.exe` on Windows). The `dotnet run` project path SHALL reference `src/Mittens.Host`.
 
 #### Scenario: Running the server with dotnet
-- **WHEN** a user runs `dotnet run --project src/Mittens`
+- **WHEN** a user runs `dotnet run --project src/Mittens.Host`
 - **THEN** the server starts successfully
 
 #### Scenario: AOT binary executes
-- **WHEN** a user runs `./Mittens`
+- **WHEN** a user runs `./Mittens.Host`
 - **THEN** the server starts successfully
 
 ### Requirement: MCP tool names use "mittens" convention

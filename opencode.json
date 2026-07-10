@@ -10,6 +10,7 @@
       }
     }
   },
+  "lsp": true,
   "agent": {
     "plan": {
       "model": "opencode-go/deepseek-v4-pro"

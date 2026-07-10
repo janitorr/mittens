@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json;
-using Mittens.Models;
+using Mittens.Core.Fact;
 
 namespace Mittens.Tests.Integration;
 
@@ -77,11 +77,11 @@ public sealed class McpEndpointTests : IAsyncLifetime
     [Fact]
     public async Task MemoryList_ReturnsFacts()
     {
-        await _factory.CreateFactAsync(new MittensFact
+        await _factory.CreateFactAsync(new Fact
         {
             Key = "mk1", Value = "mv1", Category = "fact", Scope = "global", Confidence = 1.0
         });
-        await _factory.CreateFactAsync(new MittensFact
+        await _factory.CreateFactAsync(new Fact
         {
             Key = "mk2", Value = "mv2", Category = "fact", Scope = "global", Confidence = 1.0
         });
@@ -96,7 +96,7 @@ public sealed class McpEndpointTests : IAsyncLifetime
     [Fact]
     public async Task MemoryGet_Existing_ReturnsFact()
     {
-        var created = await _factory.CreateFactAsync(new MittensFact
+        var created = await _factory.CreateFactAsync(new Fact
         {
             Key = "get-key", Value = "get-val", Category = "fact", Scope = "global", Confidence = 1.0
         });
@@ -120,11 +120,11 @@ public sealed class McpEndpointTests : IAsyncLifetime
     [Fact]
     public async Task MemorySearch_ReturnsMatches()
     {
-        await _factory.CreateFactAsync(new MittensFact
+        await _factory.CreateFactAsync(new Fact
         {
             Key = "apple", Value = "fruit", Category = "fact", Scope = "global", Confidence = 1.0
         });
-        await _factory.CreateFactAsync(new MittensFact
+        await _factory.CreateFactAsync(new Fact
         {
             Key = "banana", Value = "yellow fruit", Category = "fact", Scope = "global", Confidence = 1.0
         });
@@ -139,7 +139,7 @@ public sealed class McpEndpointTests : IAsyncLifetime
     [Fact]
     public async Task MemoryUpdate_Existing_Updates()
     {
-        var created = await _factory.CreateFactAsync(new MittensFact
+        var created = await _factory.CreateFactAsync(new Fact
         {
             Key = "upd-key", Value = "old", Category = "fact", Scope = "global", Confidence = 1.0
         });
@@ -171,7 +171,7 @@ public sealed class McpEndpointTests : IAsyncLifetime
     [Fact]
     public async Task MemoryDelete_Existing_ReturnsTrue()
     {
-        var created = await _factory.CreateFactAsync(new MittensFact
+        var created = await _factory.CreateFactAsync(new Fact
         {
             Key = "del-key", Value = "v", Category = "fact", Scope = "global", Confidence = 1.0
         });

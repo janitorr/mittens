@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Mittens\Mittens.csproj" />
+    <ProjectReference Include="..\..\src\Mittens.Host\Mittens.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>

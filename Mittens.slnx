@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Mittens/Mittens.csproj" />
+    <Project Path="src/Mittens.Core/Mittens.Core.csproj" />
+    <Project Path="src/Mittens.Host/Mittens.Host.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Mittens.Tests.Integration/Mittens.Tests.Integration.csproj" />

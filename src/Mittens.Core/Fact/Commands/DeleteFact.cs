@@ -1,0 +1,31 @@
+using Mediator;
+using Microsoft.Extensions.Logging;
+using Mittens.Core.Fact;
+using Mittens.Core.Shared;
+
+namespace Mittens.Core.Fact.Commands;
+
+public sealed record DeleteFact(int Id) : IRequest<bool>;
+
+public sealed partial class DeleteFactHandler(IFactReader reader, IFactWriter writer, ILogger<DeleteFactHandler> logger)
+    : IRequestHandler<DeleteFact, bool>
+{
+    public async ValueTask<bool> Handle(DeleteFact command, CancellationToken cancellationToken)
+    {
+        var existing = await reader.GetByIdAsync(command.Id, cancellationToken);
+
+        if (existing is null)
+            return false;
+
+        await writer.DeleteAsync(command.Id, cancellationToken);
+
+        Log.Deleted(logger, command.Id, existing.Category, existing.Key, existing.Scope);
+        return true;
+    }
+
+    private static partial class Log
+    {
+        [LoggerMessage(Level = LogLevel.Information, Message = "Deleted fact {Id} ({Category}/{Key}/{Scope})")]
+        public static partial void Deleted(ILogger logger, int id, string category, string key, string scope);
+    }
+}

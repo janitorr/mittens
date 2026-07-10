@@ -1,5 +1,5 @@
-using Mittens.Data;
-using Mittens.Models;
+using Mittens.Memory.Data;
+using Mittens.Core.Fact;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +58,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         }
     }
 
-    public async Task<MittensFact> CreateFactAsync(MittensFact fact)
+    public async Task<Fact> CreateFactAsync(Fact fact)
     {
         fact.UpdatedAt = DateTimeOffset.UtcNow;
 

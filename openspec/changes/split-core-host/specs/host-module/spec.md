@@ -1,12 +1,7 @@
-# host-module
-
-## Purpose
-Defines the structure and responsibilities of the `Mittens.Host` web project (Host) — infrastructure, endpoints, and AOT publishing.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Host references Core and implements its interfaces
-The `Mittens.Host` web project SHALL reference `Mittens.Core` and provide concrete implementations of `IFactReader` and `IFactWriter` using EF Core and SQLite.
+The `Mittens` web project SHALL reference `Mittens.Core` and provide concrete implementations of `IFactReader` and `IFactWriter` using EF Core and SQLite.
 
 #### Scenario: DI wires concrete implementations to Core interfaces
 - **WHEN** the application starts
@@ -46,7 +41,7 @@ The Host SHALL expose a health check at `/api/health` that verifies database con
 - **THEN** `GET /api/health` returns 503
 
 ### Requirement: Host manages EF Core with compiled model
-The Host SHALL use a precompiled EF Core model (`Memory/Data/Compiled/`) for AOT compatibility. Database schema SHALL be created via inline DDL at startup (no migrations).
+The Host SHALL use a precompiled EF Core model (`Data/Compiled/`) for AOT compatibility. Database schema SHALL be created via inline DDL at startup (no migrations).
 
 #### Scenario: Database is created on startup
 - **WHEN** the application starts
